@@ -12,13 +12,13 @@ package study;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 import view.inputView;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,10 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BullsAndCowsTest {
     private static LinkedHashSet<Integer> set = new LinkedHashSet<Integer>(); // 3 자리 수
-    private static int strike = 0, ball = 0;
+    private static int strike, ball;
 
     @BeforeEach
     public void makeDigits() {  // 1) 3 자리 난수 생성
+        strike = 0;
+        ball = 0;
         while (set.size() < 3) {
             double dValue = Math.random();
             int random = (int) (dValue * 10);
@@ -41,8 +43,8 @@ public class BullsAndCowsTest {
     }
 
 
-    @ValueSource
     @ParameterizedTest
+    @MethodSource("generateData")
     public void checkDigits(int[] numbers) {
         int i = 0;
         Iterator<Integer> iterator = set.iterator();
@@ -55,20 +57,31 @@ public class BullsAndCowsTest {
             checkBall(number);
         }
 
+        System.out.println(ball + "볼 " + strike + "스트라이크");
         assertEquals(3, i);
     }
 
+    static Stream<Arguments> generateData() {
+        return Stream.of(
+                Arguments.of(new int[]{1, 2, 3}));
+    }
+
+
+    @Test
     public void checkStrike(int argOfNum, int argOfSet) {
         if (argOfNum == argOfSet) {
             strike++;
             ball--;
         }
+        assertThat(strike).isNotNull();
     }
 
+    @Test
     public void checkBall(int argOfNum) {
         if (set.contains(argOfNum)) {
             ball++;
         }
+        assertThat(ball).isNotNull();
     }
 
 }
