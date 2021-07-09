@@ -8,43 +8,89 @@ package BullsAndCows;
  * 5. 게임 종료 후 다시 시작 or 완전히 종료
  */
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import BullsAndCows.View.*;
 
+import static BullsAndCows.View.ResultView.ending;
+import static BullsAndCows.View.ResultView.viewScore;
+
 
 public class Balls {
-    private static int Strike, Ball;
+    private static int Strike = 0, Ball = 0;
+    private static boolean whether = true;
+    private static ArrayList<Integer> BALLS = new ArrayList<Integer>();
 
-    public void start(){
-        Strike = 0; Ball = 0;
+    public static void main(String[] args) {
+        Balls Ball = new Balls();
+        while (whether) {
+            Ball.start();
+        }
+
+    }
+
+    public void start() {
+        Strike = 0;
+        Ball = 0;
+
+        generateBalls();
+
         InputView In = new InputView();
         int[] digits = In.input();
 
+        int i = 0;
+        while (!isNothing(digits[i], BALLS)) {
+            isStrike(digits[i], BALLS.get(i));
 
-
-    }
-
-    public static boolean isStrike(int number, int setNumber) {
-        return number == setNumber;
-    }
-
-    public static boolean isBall(int number, int setNumber) {
-        return number != setNumber;
-    }
-
-    public static boolean isNothing(int number, LinkedHashSet<Integer> set) {
-        return !set.contains(number);
-    }
-
-    public static void generateBalls(LinkedHashSet<Integer> set) {
-        while (set.size() < 3) {
-            double randomValue = Math.random();
-            int intValue = (int) (randomValue * 9) + 1;
-            set.add(intValue);
+            i++;
         }
+
+        viewScore(Strike, Ball);
+        if (Strike == 3) {
+            whether = ending();
+        }
+
     }
 
+    public static boolean isStrike(int number, int listNumber) {
+        if(number == listNumber){
+            Strike++;
+            return true;
+        }
+        Ball++;
+
+        return false;
+    }
+
+    public static boolean isBall(int number, int listNumber) {
+        return number != listNumber;
+    }
+
+    public static void isStrikeOrBall(int number, int listNumber) {
+        if (isBall(number, listNumber)) {
+            Ball++;
+        }
+
+    }
+
+    public static boolean isNothing(int number, ArrayList<Integer> list) {
+        return !list.contains(number);
+    }
+
+    public static void generateBalls() {
+        while (BALLS.size() < 3)
+            generateBall();
+
+    }
+
+    public static int generateBall() {
+        double randomValue = Math.random();
+        int intValue = (int) (randomValue * 9) + 1;
+        if (!BALLS.contains(intValue))
+            BALLS.add(intValue);
+        return intValue;
+    }
 
     public static boolean endGame(int strike) {
         if (strike == 3) {
