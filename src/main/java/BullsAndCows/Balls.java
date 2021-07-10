@@ -37,14 +37,20 @@ public class Balls {
         generateBalls();
 
         InputView In = new InputView();
-        int[] digits = In.input();
+        ArrayList<Integer> digits = In.input();
 
-        int i = 0;
-        while (!isNothing(digits[i], BALLS)) {
-            isStrike(digits[i], BALLS.get(i));
-
-            i++;
+        for (int i = 0; i < 3; i++) {
+            isStrike(digits.get(i), BALLS.get(i));
         }
+
+        for (Integer digit : digits) {
+            if(isNothing(digit, BALLS) && (!isStrike(digit, BALLS.get(digit)))){
+                Ball++;
+            }
+        }
+
+        System.out.println(digits);
+        System.out.println(BALLS);
 
         viewScore(Strike, Ball);
         if (Strike == 3) {
@@ -53,12 +59,17 @@ public class Balls {
 
     }
 
+    public static boolean whatIsIt(ArrayList<Integer> list){
+        for(int i = 0; i < 3; i++){
+            isStrike(list.get(i), BALLS.get(i));
+        }
+    }
+
     public static boolean isStrike(int number, int listNumber) {
-        if(number == listNumber){
+        if (number == listNumber) {
             Strike++;
             return true;
         }
-        Ball++;
 
         return false;
     }
@@ -67,15 +78,23 @@ public class Balls {
         return number != listNumber;
     }
 
-    public static void isStrikeOrBall(int number, int listNumber) {
-        if (isBall(number, listNumber)) {
-            Ball++;
-        }
-
-    }
 
     public static boolean isNothing(int number, ArrayList<Integer> list) {
-        return !list.contains(number);
+        if (!list.contains(number)) {
+            return true;
+        }
+
+        for(int integer : list){
+            if(!isStrike(number, integer)){
+                Ball++;
+            }
+        }
+        /*
+        1. 안에 있으면서
+        2. 스트라이크가 아니면?
+         */
+
+        return false;
     }
 
     public static void generateBalls() {
@@ -86,7 +105,7 @@ public class Balls {
 
     public static int generateBall() {
         double randomValue = Math.random();
-        int intValue = (int) (randomValue * 9) + 1;
+        int intValue = (int) (randomValue * 9 + 1);
         if (!BALLS.contains(intValue))
             BALLS.add(intValue);
         return intValue;
