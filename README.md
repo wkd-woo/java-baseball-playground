@@ -37,4 +37,3 @@ ex) git checkout -b apply-feedback
 > 6. 게임 종료 후 다시 시작 or 완전히 종료
 
      
-     
