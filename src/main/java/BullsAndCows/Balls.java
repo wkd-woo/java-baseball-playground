@@ -5,11 +5,10 @@ package BullsAndCows;
  * 2. 서로 다른 3자리 수를 입력 (사용자) o
  * 3. 각 자리 수 일치(스트라이크) or 다른 포지션에 존재(볼) 여부 확인 o
  * 4. 숫자 3개를 모두 맞췄을 때 게임 종료 o
- * 5. 게임 종료 후 다시 시작 or 완전히 종료
+ * 5. 게임 종료 후 다시 시작 or 완전히 종료 o
  */
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 import BullsAndCows.View.*;
 
@@ -44,9 +43,7 @@ public class Balls {
         }
 
         for (Integer digit : digits) {
-            if(isNothing(digit, BALLS) && (!isStrike(digit, BALLS.get(digit)))){
-                Ball++;
-            }
+            isNothing(digit, BALLS);
         }
 
         System.out.println(digits);
@@ -59,15 +56,11 @@ public class Balls {
 
     }
 
-    public static boolean whatIsIt(ArrayList<Integer> list){
-        for(int i = 0; i < 3; i++){
-            isStrike(list.get(i), BALLS.get(i));
-        }
-    }
-
     public static boolean isStrike(int number, int listNumber) {
         if (number == listNumber) {
             Strike++;
+            Ball--;
+
             return true;
         }
 
@@ -84,11 +77,9 @@ public class Balls {
             return true;
         }
 
-        for(int integer : list){
-            if(!isStrike(number, integer)){
-                Ball++;
-            }
-        }
+
+        Ball++;
+
         /*
         1. 안에 있으면서
         2. 스트라이크가 아니면?
